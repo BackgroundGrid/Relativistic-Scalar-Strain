@@ -16,18 +16,21 @@ def bootstrap_environment():
         subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", req_file])
 
 def execute_section_scripts():
-    """Runs all numerical section scripts in section_scripts_vol_01."""
+    """Runs all numerical section scripts (including equations_results.py) in section_scripts_vol_01."""
     scripts_dir = os.path.join(ROOT_DIR, "section_scripts_vol_01")
     if not os.path.exists(scripts_dir):
         print(f"Directory missing: {scripts_dir}")
         return
 
-    print("\n[2/3] Executing section scripts & generating plot assets...")
+    print("\n[2/3] Executing section scripts & generating plot/equation assets...")
+    env = os.environ.copy()
+    env["PYTHONPATH"] = ROOT_DIR
+
     for script_name in sorted(os.listdir(scripts_dir)):
         if script_name.endswith(".py"):
             script_path = os.path.join(scripts_dir, script_name)
             print(f" -> Running {script_name}")
-            subprocess.run([sys.executable, script_path], cwd=ROOT_DIR)
+            subprocess.run([sys.executable, script_path], cwd=ROOT_DIR, env=env)
 
 def execute_tests():
     """Runs automated physics tests in Test_files."""
