@@ -1,6 +1,8 @@
 # Relativistic Scalar Strain (RSS) Architecture
 ## Vacuum Stress Saturation (VSS) / Vacuum Interlocking Gravity (VIG) Monograph & Simulation Suite
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22810512.svg)](https://doi.org/10.5281/zenodo.22810512)
+
 > **Notice:** Proprietary research, field-theoretic derivations, numerical simulation engines, and visual proofs for the Relativistic Scalar Strain (RSS) Architecture / Vacuum Stress Saturation (VSS) framework. Copyright © 2026 Ravinder Singh. All Rights Reserved. Reproduction, redistribution, or AI model ingestion is strictly prohibited under the enclosed `License.md`.
 
 ---
