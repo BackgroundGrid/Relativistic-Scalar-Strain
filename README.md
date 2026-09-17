@@ -1,34 +1,48 @@
 # Relativistic Scalar Strain (RSS) Architecture
 ## Vacuum Stress Saturation (VSS) / Vacuum Interlocking Gravity (VIG) Monograph & Simulation Suite
 
-> **Notice:** This repository contains proprietary research, field-theoretic derivations, numerical simulation engines, and visual proofs for the Relativistic Scalar Strain (RSS) Architecture / Vacuum Stress Saturation (VSS) framework. All rights are reserved under the enclosed `License.md`.
+> **Notice:** Proprietary research, field-theoretic derivations, numerical simulation engines, and visual proofs for the Relativistic Scalar Strain (RSS) Architecture / Vacuum Stress Saturation (VSS) framework. Copyright © 2026 Ravinder Singh. All Rights Reserved. Reproduction, redistribution, or AI model ingestion is strictly prohibited under the enclosed `License.md`.
 
 ---
 
 ## Architecture Summary
 
-The **Relativistic Scalar Strain (RSS)** architecture—operating under the **Vacuum Stress Saturation (VSS)** model engine—formulates space as a non-linear elastic continuum with finite strain saturation. By replacing passive vacuum assumptions with a constitutive strain boundary condition, the framework derives galactic kinematics, cluster hydrostatics, gravitational lensing, and cosmic horizon acceleration directly from visible baryonic mass distributions with **zero free parameters**, zero halo profile fitting, and zero dark matter particles.
+The **Relativistic Scalar Strain (RSS)** architecture—operating under the **Vacuum Stress Saturation (VSS)** engine—formulates space-time as a non-linear elastic continuum with finite strain saturation. By replacing passive vacuum assumptions with a constitutive strain boundary condition, the framework derives galactic kinematics, cluster hydrostatics, gravitational lensing, and cosmic horizon acceleration directly from visible baryonic mass distributions with **zero free parameters**, zero halo profile fitting, and zero dark matter or dark energy fluids.
 
-The primary threshold acceleration scale $a_{\text{crit}}$ is derived strictly from first principles using exact SI constants and spherical horizon geometry:
+### Theoretical Pillars
 
-$$a_{\text{crit}} \equiv \frac{c \cdot H_0}{2\pi} \approx 1.0422 \times 10^{-10}\text{ m/s}^2$$
+1. **Axiomatic Acceleration Scale:** Derived strictly from fundamental constants and spherical horizon geometry:
+   $$a_{\text{crit}} \equiv \frac{c \cdot H_0}{2\pi} \approx 1.0422 \times 10^{-10}\text{ m/s}^2$$
 
-### Master Constitutive Relation
+2. **Master Constitutive Relation:** Governs all gravitational interactions across 4 orders of mass magnitude:
+   $$g_{\text{obs}}\left(1 - e^{-g_{\text{obs}}/a_{\text{crit}}}\right) = g_{\text{bar}}$$
 
-$$g_{\text{obs}}\left(1 - e^{-g_{\text{obs}}/a_{\text{crit}}}\right) = g_{\text{bar}}$$
+3. **Geometric Vacuum Saturation:** Exact horizon boundary closure replacing Dark Energy:
+   $$\Omega_{\text{vac}} = 1 - \frac{1}{\pi} \approx 0.6817 \quad (68.17\%)$$
 
 ---
 
-## Repository Layout
+## Repository Structure
+
+The workspace is flattened to eliminate Windows `MAX_PATH` execution limits and ensure zero-configuration execution:
 
 ```text
-Relativistic-Scalar-Strain/
-├── Docs/                     # Monograph manuscripts (Vol I & II)
-├── section_scripts_vol_01/   # Numerical execution scripts per section
-├── Test_files/               # Physics verification test suite
-├── assets_figures_vol1/      # Generated figures and plot outputs
-├── scr_vss_engine/           # Core physics calculator & constants
-├── License.md                # License terms
-├── requirements.txt          # Python dependencies
-├── Run_all.py                # Single-entry zero-config execution script
-└── README.md                 # Project documentation
+├── Run_all.py                            # Master pipeline orchestrator (Environment, Execution, Pytest)
+├── equations_results.txt                 # Auto-generated standalone mathematical ledger
+├── requirements.txt                      # Project dependencies (NumPy, SciPy, Matplotlib, Pytest)
+├── License.md                            # Proprietary copyright notice
+├── section_scripts_vol_01/               # Volume I physics modules & simulation engines
+│   ├── section_01_axiomatic_derivation.py
+│   ├── section_02_solar_system_screening.py
+│   ├── section_03_sparc_galaxies.py
+│   ├── section_04_cluster_hydrostatics.py
+│   ├── section_05_metric_lensing.py
+│   ├── section_06_cosmological_synthesis.py
+│   ├── section_07_cosmological_3d_simulation.py  # Interactive photorealistic 3D Cosmos Engine
+│   └── equations_results.py              # Direct disk write module for equations_results.txt
+├── Test_files/                           # Automated physics test suite
+│   ├── test_volume_1_physics.py          # Axiomatic, screening, and kinematic assertions
+│   └── test_volume_2_physics.py          # Covariant field, PPN, and geometric closure tests
+└── assets_figures_vol1/                  # Rendered plot assets & 3D simulation snapshots
+    ├── figure_6_1_vss_unification.png
+    └── figure_7_1_3d_cosmological_simulation.png
