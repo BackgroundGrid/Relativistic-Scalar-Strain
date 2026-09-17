@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you cite or utilize this monograph, numerical engine, or theoretical framework, please cite it as below."
+authors:
+  - family-names: "Singh"
+    given-names: "Ravinder"
+    orcid: "https://orcid.org/0009-0002-6532-7699"
+title: "Relativistic Scalar Strain (RSS) Architecture: Vacuum Stress Saturation (VSS) / Vacuum Interlocking Gravity (VIG) Monograph & Simulation Suite"
+version: "1.0.0"
+doi: "10.5281/zenodo.22810512"
+date-released: 2026-09-17
+url: "https://doi.org/10.5281/zenodo.22810512"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.22810512"
+    description: "Zenodo DOI archive for the RSS/VSS Monograph & Simulation Engine"
+keywords:
+  - "Relativistic Scalar Strain"
+  - "Vacuum Stress Saturation"
+  - "Modified Gravity"
+  - "Dark Matter Alternative"
+  - "Dark Energy Alternative"
+  - "SPARC Galaxies"
+  - "Zero-Parameter Physics"
+license: "Proprietary"
