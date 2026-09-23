@@ -47,7 +47,8 @@ The workspace is flattened at the root level to eliminate OS path depth limits a
 ├── requirements.txt                      # Dependency manifest (NumPy, SciPy, Matplotlib, Pytest)
 ├── License.md                            # Proprietary copyright notice
 ├── README.md                             # Monograph documentation & build guide
-├──Citation.ciff
+├── Citation.cff
+├── RESEARCH_SUPPORT.md                   # Calling for Support  
 │
 ├── section_scripts_vol_01/               # Volume I physics modules & simulation engines
 │   ├── section_01_axiomatic_derivation.py
