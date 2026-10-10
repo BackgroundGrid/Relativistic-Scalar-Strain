@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VSS 4D Holographic Spiral Galaxy Engine</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body, html { width: 100%; height: 100%; overflow: hidden; background-color: #02040a; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #f3f4f6; }
+        #webgl-container { width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1; }
+        
+        /* HUD Glass Interface */
+        #hud-container {
+            position: absolute; top: 20px; left: 20px; z-index: 10;
+            background: rgba(10, 15, 30, 0.85); backdrop-filter: blur(16px);
+            border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 12px;
+            padding: 18px; width: 330px; box-shadow: 0 0 35px rgba(2, 132, 199, 0.25);
+            pointer-events: none;
+        }
+        h1 { font-size: 15px; font-weight: 700; color: #38bdf8; letter-spacing: 1.5px; margin-bottom: 2px; text-transform: uppercase; }
+        h2 { font-size: 10px; font-weight: 500; color: #94a3b8; margin-bottom: 12px; }
+        
+        .metric-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 3px; }
+        .metric-label { color: #94a3b8; }
+        .metric-value { font-family: monospace; font-weight: bold; color: #38bdf8; }
+        .highlight-vss { color: #c084fc; }
+
+        /* Control Panel */
+        #control-panel {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 10;
+            display: flex; gap: 10px; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px);
+            padding: 10px 18px; border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .btn {
+            background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4);
+            color: #f8fafc; padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        .btn:hover { background: rgba(56, 189, 248, 0.4); box-shadow: 0 0 12px rgba(56, 189, 248, 0.5); }
+    </style>
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+    <div id="webgl-container"></div>
+
+    <!-- HUD Telemetry -->
+    <div id="hud-container">
+        <h1>VSS Spiral Galaxy Matrix</h1>
+        <h2>3D Logarithmic Arm & Strain Field Engine</h2>
+
+        <div class="metric-row">
+            <span class="metric-label">Structure Type:</span>
+            <span class="metric-value">4-Arm Spiral Galaxy</span>
+        </div>
+        <div class="metric-row">
+            <span class="metric-label">Stellar Population:</span>
+            <span class="metric-value">80,000 Glowing Stars</span>
+        </div>
+        <div class="metric-row">
+            <span class="metric-label">VSS Boost ν(Y):</span>
+            <span class="metric-value highlight-vss" id="val-nu">2.450x</span>
+        </div>
+        <div class="metric-row">
+            <span class="metric-label">Scalar Strain Field (ϕ):</span>
+            <span class="metric-value" id="val-phi">0.8961</span>
+        </div>
+        <div class="metric-row">
+            <span class="metric-label">Dark Matter Content:</span>
+            <span class="metric-value highlight-vss">0.000% (Pure VSS)</span>
+        </div>
+    </div>
+
+    <!-- Holographic Controls -->
+    <div id="control-panel">
+        <button class="btn" id="btn-speed">Speed: Slow-Mo</button>
+        <button class="btn" id="btn-view">View: Top-Down</button>
+        <button class="btn" id="btn-grid">3D Grid: ON</button>
+        <button class="btn" id="btn-recenter">Recenter Inside</button>
+    </div>
+
+    <script>
+        // --- CONSTANTS & PHYSICAL BASELINES ---
+        const A_CRIT = 1.04217e-10;
+        const G_CONST = 6.67430e-11;
+        const M_SUN = 1.989e30;
+        const KPC_TO_M = 3.0857e19;
+        const TOTAL_STARS = 80000;
+        const TOTAL_GAS = 20000;
+        const M_DISK = 6.0e10 * M_SUN;
+        const R_DISK_SCALE = 4.0;
+
+        let timeSpeedFactor = 0.08; // Smooth cinematic velocity
+
+        // --- THREE.JS SCENE SETUP ---
+        const container = document.getElementById('webgl-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x02040a, 0.012);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 18, 25); // Overview position showing full spiral galaxy
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        // --- PROCEDURAL GLOW TEXTURE GENERATOR (NO EXTERNAL IMAGES NEEDED) ---
+        function createParticleGlowTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64; canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+
+            const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+            gradient.addColorStop(0, 'rgba(255, 255, 255, 1.0)');
+            gradient.addColorStop(0.2, 'rgba(255, 240, 200, 0.9)');
+            gradient.addColorStop(0.5, 'rgba(56, 189, 248, 0.4)');
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 64, 64);
+
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        const starTexture = createParticleGlowTexture();
+
+        // --- VSS PHYSICS CALCULATIONS ---
+        function computeVSSBoost(gN) {
+            if (gN <= 1e-20) return 1.0;
+            const Y = gN / A_CRIT;
+            return 0.5 + 0.5 * Math.sqrt(1.0 + 4.0 / Y);
+        }
+
+        function calculatePhysics(r_kpc) {
+            const r_m = Math.max(0.05, r_kpc) * KPC_TO_M;
+            const y = r_kpc / R_DISK_SCALE;
+            const m_enc = M_DISK * Math.max(0.001, (1.0 - (1.0 + y) * Math.exp(-y)));
+            
+            const gN = (G_CONST * m_enc) / (r_m * r_m);
+            const nu = computeVSSBoost(gN);
+            const geff = gN * nu;
+            const v_m_s = Math.sqrt(r_m * geff);
+            const v_km_s = v_m_s / 1000.0;
+            const phi = Math.log(nu);
+
+            return { gN, nu, geff, v_km_s, phi };
+        }
+
+        // --- LOGARITHMIC SPIRAL GALAXY GENERATION ---
+        const starGeometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(TOTAL_STARS * 3);
+        const colors = new Float32Array(TOTAL_STARS * 3);
+        const starData = [];
+
+        const colorCore = new THREE.Color('#fff7ed');  // Bright golden core
+        const colorInner = new THREE.Color('#fde047'); // Warm yellow
+        const colorArm = new THREE.Color('#38bdf8');   // Cyan blue spiral arms
+        const colorOuter = new THREE.Color('#c084fc'); // Purple VSS boundary
+
+        const NUM_ARMS = 4;
+        const SPIRAL_WINDING = 2.2; // Spiral arm pitch angle
+
+        for (let i = 0; i < TOTAL_STARS; i++) {
+            let r, theta, z;
+
+            // 20% Stars in Dense Central Galactic Bulge, 80% in Logarithmic Arms
+            if (Math.random() < 0.2) {
+                r = Math.random() * 2.0;
+                theta = Math.random() * Math.PI * 2;
+                z = (Math.random() - 0.5) * 1.2 * Math.exp(-r);
+            } else {
+                r = 1.5 + Math.pow(Math.random(), 1.5) * 14.0;
+                const armIndex = i % NUM_ARMS;
+                const armBaseAngle = armIndex * ((2 * Math.PI) / NUM_ARMS);
+                
+                // Logarithmic Spiral Formula: theta = base + winding * ln(r)
+                const spiralAngle = armBaseAngle + SPIRAL_WINDING * Math.log(r / 1.5);
+                const scatter = (Math.random() - 0.5) * (0.6 + r * 0.08); // Dispersion widens outward
+                
+                theta = spiralAngle + scatter;
+                z = (Math.random() - 0.5) * 0.4 * Math.exp(-r / 8.0);
+            }
+
+            const x = r * Math.cos(theta);
+            const pz = r * Math.sin(theta);
+
+            positions[i*3] = x;
+            positions[i*3+1] = z;
+            positions[i*3+2] = pz;
+
+            // Compute VSS Vflat velocity
+            const phys = calculatePhysics(r);
+            const omega = ((phys.v_km_s * 1000.0) / (r * KPC_TO_M)) * 8e13; 
+            
+            starData.push({ radius: r, angle: theta, height: z, omega: omega });
+
+            // Color gradient across galaxy components
+            let c = new THREE.Color();
+            if (r < 1.5) {
+                c.lerpColors(colorCore, colorInner, r / 1.5);
+            } else if (r < 6.0) {
+                c.lerpColors(colorInner, colorArm, (r - 1.5) / 4.5);
+            } else {
+                c.lerpColors(colorArm, colorOuter, Math.min(1.0, (r - 6.0) / 8.0));
+            }
+
+            colors[i*3] = c.r;
+            colors[i*3+1] = c.g;
+            colors[i*3+2] = c.b;
+        }
+
+        starGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        starGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const starMaterial = new THREE.PointsMaterial({
+            size: 0.4,
+            map: starTexture,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.9,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+
+        const starSystem = new THREE.Points(starGeometry, starMaterial);
+        scene.add(starSystem);
+
+        // --- GLOWING GALACTIC CORE BULGE ---
+        const coreGeo = new THREE.SphereGeometry(1.2, 32, 32);
+        const coreMat = new THREE.MeshBasicMaterial({
+            color: 0xffedd5,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending
+        });
+        const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+        scene.add(coreMesh);
+
+        // --- 3D SPACETIME STRAIN FIELD GRID ---
+        const gridGroup = new THREE.Group();
+        const gridPointsGeo = new THREE.BufferGeometry();
+        const gridPos = [];
+        for (let x = -20; x <= 20; x += 1.2) {
+            for (let z = -20; z <= 20; z += 1.2) {
+                gridPos.push(x, -3.0, z);
+            }
+        }
+        gridPointsGeo.setAttribute('position', new THREE.Float32BufferAttribute(gridPos, 3));
+        const gridMat = new THREE.PointsMaterial({ size: 0.1, color: 0x0284c7, transparent: true, opacity: 0.35 });
+        const strainGrid = new THREE.Points(gridPointsGeo, gridMat);
+        gridGroup.add(strainGrid);
+        scene.add(gridGroup);
+
+        // --- INTERACTIVE MOUSE / ROTATION CONTROLS ---
+        let isMouseDown = false, mouseX = 0, mouseY = 0;
+        let pitch = 0.6, yaw = 0;
+
+        camera.lookAt(0, 0, 0);
+
+        window.addEventListener('mousedown', (e) => { isMouseDown = true; mouseX = e.clientX; mouseY = e.clientY; });
+        window.addEventListener('mouseup', () => { isMouseDown = false; });
+        window.addEventListener('mousemove', (e) => {
+            if (!isMouseDown) return;
+            yaw += (e.clientX - mouseX) * 0.005;
+            pitch += (e.clientY - mouseY) * 0.005;
+            mouseX = e.clientX; mouseY = e.clientY;
+
+            pitch = Math.max(-Math.PI/2.1, Math.min(Math.PI/2.1, pitch));
+            
+            const dist = 30;
+            camera.position.x = dist * Math.sin(yaw) * Math.cos(pitch);
+            camera.position.y = dist * Math.sin(pitch);
+            camera.position.z = dist * Math.cos(yaw) * Math.cos(pitch);
+            camera.lookAt(0, 0, 0);
+        });
+
+        // --- BUTTON CONTROLS ---
+        document.getElementById('btn-speed').addEventListener('click', (e) => {
+            if (timeSpeedFactor === 0.08) {
+                timeSpeedFactor = 0.02;
+                e.target.innerText = "Speed: Frozen Flow";
+            } else {
+                timeSpeedFactor = 0.08;
+                e.target.innerText = "Speed: Slow-Mo";
+            }
+        });
+
+        document.getElementById('btn-view').addEventListener('click', (e) => {
+            if (camera.position.y > 20) {
+                // Switch to Side Angle
+                camera.position.set(0, 2, 32);
+                e.target.innerText = "View: Side Profile";
+            } else {
+                // Top-down spiral view
+                camera.position.set(0, 32, 0.1);
+                e.target.innerText = "View: Top-Down";
+            }
+            camera.lookAt(0, 0, 0);
+        });
+
+        document.getElementById('btn-grid').addEventListener('click', (e) => {
+            gridGroup.visible = !gridGroup.visible;
+            e.target.innerText = gridGroup.visible ? "3D Grid: ON" : "3D Grid: OFF";
+        });
+
+        document.getElementById('btn-recenter').addEventListener('click', () => {
+            camera.position.set(0, 0.5, 2.5); // Move camera inside galaxy core
+            camera.lookAt(5, 0, 5);
+        });
+
+        // --- ANIMATION LOOP ---
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const deltaTime = clock.getDelta();
+
+            // Rotate Spiral Arms according to VSS Vflat velocity profile
+            if (timeSpeedFactor > 0) {
+                const posAttr = starGeometry.attributes.position;
+                const posArray = posAttr.array;
+
+                for (let i = 0; i < TOTAL_STARS; i++) {
+                    const data = starData[i];
+                    data.angle += data.omega * deltaTime * timeSpeedFactor;
+
+                    posArray[i*3] = data.radius * Math.cos(data.angle);
+                    posArray[i*3+2] = data.radius * Math.sin(data.angle);
+                }
+                posAttr.needsUpdate = true;
+            }
+
+            // Update Telemetry
+            const camR = Math.sqrt(camera.position.x**2 + camera.position.z**2);
+            const phys = calculatePhysics(camR);
+            document.getElementById('val-nu').innerText = phys.nu.toFixed(3) + "x";
+            document.getElementById('val-phi').innerText = phys.phi.toFixed(4);
+
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
+    </script>
+</body>
+</html>
