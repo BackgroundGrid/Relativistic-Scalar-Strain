@@ -3,7 +3,7 @@
 
 [![DOI Volume 1](https://zenodo.org/badge/DOI/10.5281/zenodo.22810512.svg)](https://doi.org/10.5281/zenodo.22810512)
 [![DOI Volume II](https://zenodo.org/badge/DOI/10.5281/zenodo.22914793.svg)](https://doi.org/10.5281/zenodo.22914793)
-
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23273937.svg)](https://doi.org/10.5281/zenodo.23273937)
 > **Notice:** Proprietary research, field-theoretic derivations, numerical simulation engines, and visual proofs for the Relativistic Scalar Strain (RSS) Architecture / Vacuum Stress Saturation (VSS) framework. Copyright © 2026 Ravinder Singh. All Rights Reserved. Reproduction, redistribution, or AI model ingestion is strictly prohibited under the enclosed `License.md`.
 
 ---
