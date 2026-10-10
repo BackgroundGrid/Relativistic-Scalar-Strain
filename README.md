@@ -40,10 +40,12 @@ The **Relativistic Scalar Strain (RSS)** architecture—operating under the **Va
 The workspace is flattened at the root level to eliminate OS path depth limits and ensure clean multi-volume execution:
 
 ```text
-├── Run_all_VI.py                            # Master orchestrator for Volume 1 pipeline
-├── Run_all_VII.py                        # Master orchestrator for Volume 2 pipeline
+├── Run_all_V_I.py                         # Master orchestrator for Volume 1 pipeline
+├── Run_all_V_II.py                        # Master orchestrator for Volume 2 pipeline
+├── Run_all_V_III.py                       # Master orchestrator for Volume 3 pipeline
 ├── equations_results.txt                 # Auto-generated standalone ledger for Volume 1
 ├── equations_results_VII.txt             # Auto-generated standalone ledger for Volume 2
+├── equations_results_VIII.txt            # Auto-generated standalone ledger for Volume 3
 ├── requirements.txt                      # Dependency manifest (NumPy, SciPy, Matplotlib, Pytest)
 ├── License.md                            # Proprietary copyright notice
 ├── README.md                             # Monograph documentation & build guide
@@ -71,12 +73,22 @@ The workspace is flattened at the root level to eliminate OS path depth limits a
 │   ├── section_15_bao_engine.py          # Baryon acoustic oscillation angular scale engine
 │   ├── section_16_weak_lensing_engine.py # Metric slip lensing potential & S8 tension solver
 │   ├── section_17_rsd_growth_engine.py   # Redshift-space distortion growth engine f*sigma8(z)
-|   └── equations_results_VII.py          # # Volume II disk write module for equations_results_VI.txt
+│   └── equations_results_VII.py          # Volume II disk write module for equations_results_VII.txt
+│
+├── section_scripts_vol_03/               # Volume III physics engines & numerical solvers (Sections 18–25)
+│   ├── section_18_non_linear_formation.py # Non-linear structure formation mechanics
+│   ├── section_19_cluster_mass_boost.py  # High-z cluster mass function boost (+18.8%)
+│   ├── section_20_relativistic_lensing.py# Relativistic lensing shear & deflection
+│   ├── section_21_abel_projection.py     # Abel projection for baryonic clusters
+│   ├── section_22_icm_hydrostatics.py    # ICM hydrostatics & mass bias elimination (1-b = 1.0)
+│   ├── section_23_cmb_acoustic_peaks.py  # CMB acoustic peaks & strain amplification
+│   ├── section_24_acoustic_dynamics.py   # Photon-baryon fluid acoustic dynamics
+│   ├── section_25_gw_propagation.py      # Gravitational wave speed audit (c_gw ≡ c)
+│   └── equations_results_VIII.py         # Volume III disk write module for equations_results_VIII.txt
 │
 ├── Test_files/                           # Automated physics test suite
 │   ├── test_volume_1_physics.py          # Axiomatic, screening, and kinematic assertions
-│   └── test_volume_2_physics.py          # Metric slip, growth rate, and S8 tension unit tests
-│
-└── assets_figures_vol1/                  # Rendered plot assets & 3D simulation snapshots
-    ├── figure_6_1_vss_unification.png
-    └── figure_7_1_3d_cosmological_simulation.png
+│   ├── test_volume_2_physics.py          # Metric slip, growth rate, and S8 tension unit tests
+│   └── test_volume_3_physics.py          # Non-linear structure, lensing, ICM, and GW speed unit tests
+
+
